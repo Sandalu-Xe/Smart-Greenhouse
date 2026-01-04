@@ -16,130 +16,150 @@ st.set_page_config(page_title="Smart Greenhouse", layout="wide", initial_sidebar
 # --- APPLE-STYLE CSS INJECTION ---
 st.markdown("""
 <style>
-    /* Global Settings */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    /* 1. Global Typography & Reset */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     
     html, body, [class*="css"]  {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
-        background-color: #F5F5F7 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        background-color: #F5F5F7 !important; /* Apple Light Gray Background */
         color: #1D1D1F;
+        scroll-behavior: smooth;
+    }
+
+    /* 2. Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Apply animation to main containers with staggered delays */
+    .block-container > div {
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
     
-    /* Headers */
+    /* 3. Headers */
     h1, h2, h3 {
         color: #1D1D1F;
         font-weight: 600;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em; /* Tight Apple tracking */
     }
     
-    h1 { font-size: 48px !important; margin-bottom: 0.5rem; }
-    h2 { font-size: 32px !important; margin-top: 1.5rem; }
-    h3 { font-size: 24px !important; }
+    h1 { font-size: 44px !important; margin-bottom: 0.5rem; }
+    h2 { font-size: 28px !important; margin-top: 2rem; font-weight: 600; }
+    h3 { font-size: 20px !important; font-weight: 500; opacity: 0.8; }
     
-    /* Sidebar */
+    /* 4. Sidebar Styles */
     [data-testid="stSidebar"] {
-        background-color: #FFFFFF !important;
-        border-right: 1px solid #E5E5E5;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(20px); /* Frosted Glass */
+        border-right: 1px solid rgba(0,0,0,0.05);
     }
     
-    /* Force all text in sidebar to be dark (fixes white-on-white issue) */
-    [data-testid="stSidebar"] div, 
-    [data-testid="stSidebar"] label, 
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] span {
-        color: #1D1D1F !important;
+    /* Sidebar Text Visibility Fix */
+    [data-testid="stSidebar"] div, [data-testid="stSidebar"] label, [data-testid="stSidebar"] p {
+        color: #1D1D1F !important; 
     }
     
-    /* Headers in Sidebar */
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-        color: #1D1D1F !important;
-    }
-    
-    /* Fix Button Text Color in Sidebar (Keep it White) */
-    [data-testid="stSidebar"] button div {
-        color: white !important;
-    }
-    
-    /* Buttons (Apple Blue) */
+    /* 5. Apple-style Buttons */
     .stButton > button {
-        background-color: #0071E3 !important;
+        background: #0071E3 !important; /* System Blue */
         color: white !important;
         border: none !important;
-        border-radius: 980px !important; /* Pill shape */
-        padding: 0.6rem 1.5rem !important;
+        border-radius: 980px !important;
+        padding: 0.6rem 1.8rem !important;
+        font-size: 15px !important;
         font-weight: 500 !important;
-        font-size: 16px !important;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 113, 227, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
     .stButton > button:hover {
-        background-color: #0077ED !important;
-        transform: scale(1.02);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        transform: scale(1.03);
+        box-shadow: 0 6px 12px rgba(0, 113, 227, 0.3);
     }
     
-    /* Metric Cards / Dataframes */
-    [data-testid="stTable"] {
+    .stButton > button:active {
+        transform: scale(0.97);
+    }
+    
+    /* Fix Button Text in Sidebar */
+    [data-testid="stSidebar"] button div { color: white !important; }
+
+    /* 6. Card Containers */
+    /* We use a custom class 'apple-card' injected via markdown for specific sections */
+    .apple-card {
         background: white;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
     
-    /* General Cards for Layout using st.container mimics (approx) */
-    .css-1r6slb0, .css-12oz5g7 { 
-        background-color: white;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    .apple-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px -10px rgba(0,0,0,0.1);
+    }
+    
+    /* Metric styling override */
+    [data-testid="stMetricValue"] {
+        font-size: 28px !important;
+        font-weight: 600;
     }
 
-    /* Remove Streamlit branding slightly */
+    /* Remove Streamlit Clutter */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     
 </style>
 """, unsafe_allow_html=True)
 
-# Header Section
-st.markdown("# Smart Greenhouse")
-st.markdown("<h3 style='font-weight: 400; color: #86868b; margin-top: -15px;'>Fuzzy Logic Control System • Mamdani vs Sugeno</h3>", unsafe_allow_html=True)
-st.markdown("---")
+# Header Section with Animation Wrapper
+st.markdown("""
+<div style='text-align: center; padding: 40px 0; animation: fadeInUp 1s ease;'>
+    <h1 style='margin-bottom: 10px;'>Smart Greenhouse</h1>
+    <h3 style='opacity: 0.6;'>Advanced Fuzzy Logic Control System</h3>
+</div>
+""", unsafe_allow_html=True)
 
 # Sidebar Controls
 st.sidebar.markdown("## Control Center")
-st.sidebar.markdown("Configure your simulation parameters below.")
+st.sidebar.markdown("Configure your simulation parameters.")
 num_tests = st.sidebar.slider("Number of Random Tests", min_value=1, max_value=50, value=20)
 steps_per_test = st.sidebar.slider("Steps per Test", min_value=10, max_value=100, value=50)
 
 st.sidebar.markdown("---")
-st.sidebar.info("Click **Run Simulation** to execute the Python simulation engine.")
 
 if st.sidebar.button("Run Simulation", use_container_width=True):
     progress_bar = st.progress(0)
     status_text = st.empty()
     
-    with st.spinner("Initializing Controllers..."):
-        status_text.text("Booting fuzzy logic kernels...")
+    with st.spinner("Processing Logic..."):
         mamdani = MamdaniController()
         sugeno = SugenoController()
         sim = GreenhouseSimulation(mamdani, sugeno)
         progress_bar.progress(30)
+        time.sleep(0.3)
     
-    with st.spinner(f"Running {num_tests} Tests..."):
-        status_text.text(f"Executing {num_tests} stochastic simulation cycles...")
+    with st.spinner("Running stochastic cycles..."):
         metrics = sim.run_random_tests(num_tests=num_tests, steps_per_test=steps_per_test)
         progress_bar.progress(100)
         time.sleep(0.5)
         status_text.empty()
         progress_bar.empty()
         
-    st.success("Simulation Complete")
+    st.markdown("<div style='text-align: center; color: #34C759; font-weight: 600; margin-bottom: 20px;'>Simulation Successfully Completed</div>", unsafe_allow_html=True)
     
     # 1. Comparison Table
-    st.markdown("## Performance Analysis")
+    st.markdown("## Performance Metrics")
     
     data = {
         "Metric": ["Average Response Time (ms)", "Average Error", "Energy Usage", "Smoothness Score"],
@@ -158,46 +178,50 @@ if st.sidebar.button("Run Simulation", use_container_width=True):
     }
     df = pd.DataFrame(data)
     
-    # Custom styling for dataframe
+    # Render Table in Card
+    st.markdown('<div class="apple-card">', unsafe_allow_html=True)
     st.dataframe(df, use_container_width=True, hide_index=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # 2. Visualization
-    st.markdown("## Visual Insight")
+    st.markdown("## Visual Insights")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown("<div style='background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;'>", unsafe_allow_html=True)
-        st.markdown("#### Avg Error")
+        st.markdown('<div class="apple-card">', unsafe_allow_html=True)
+        st.markdown("**Avg Error**")
         st.caption("Lower is better")
         st.bar_chart(df.set_index("Metric").loc["Average Error"], color="#FF3B30") # Apple Red
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
     with col2:
-         st.markdown("<div style='background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;'>", unsafe_allow_html=True)
-         st.markdown("#### Energy Usage")
+         st.markdown('<div class="apple-card">', unsafe_allow_html=True)
+         st.markdown("**Energy Usage**")
          st.caption("Lower is better")
          st.bar_chart(df.set_index("Metric").loc["Energy Usage"], color="#34C759") # Apple Green
-         st.markdown("</div>", unsafe_allow_html=True)
+         st.markdown('</div>', unsafe_allow_html=True)
 
     with col3:
-         st.markdown("<div style='background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;'>", unsafe_allow_html=True)
-         st.markdown("#### Response Time")
+         st.markdown('<div class="apple-card">', unsafe_allow_html=True)
+         st.markdown("**Response Time**")
          st.caption("Lower is better")
          st.bar_chart(df.set_index("Metric").loc["Average Response Time (ms)"], color="#0071E3") # Apple Blue
-         st.markdown("</div>", unsafe_allow_html=True)
+         st.markdown('</div>', unsafe_allow_html=True)
     
 else:
+    # Empty State with Animation
     st.markdown("""
-    <div style='background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 50px;'>
-        <h2 style='color: #1D1D1F; margin-top: 0;'>Ready to Simulate</h2>
-        <p style='color: #86868b; font-size: 18px;'>Configure your parameters in the sidebar and press "Run Simulation" to begin the fuzzy logic comparison.</p>
+    <div class="apple-card" style='text-align: center; padding: 60px 20px;'>
+        <h2 style='margin-top: 0;'>Ready to Start</h2>
+        <p style='color: #86868b; font-size: 18px; margin-bottom: 30px;'>Initiate the control system simulation to analyze performance.</p>
+        <div style='font-size: 40px;'>🚀</div>
     </div>
     """, unsafe_allow_html=True)
 
 # 3. Report
-st.markdown("## Competency Report")
-st.markdown("<div style='background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);'>", unsafe_allow_html=True)
+st.markdown("## Analysis Report")
+st.markdown('<div class="apple-card">', unsafe_allow_html=True)
 
 try:
     with open("/Users/sandaluthushan/.gemini/antigravity/brain/7ea606e8-b02b-481f-be3d-825c1d167647/report.md", "r") as f:
